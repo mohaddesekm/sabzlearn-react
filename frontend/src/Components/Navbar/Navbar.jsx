@@ -1,4 +1,5 @@
 import './Navbar.css';
+import { Link } from 'react-router';
 
 export default function Navbar() {
     return (
@@ -186,11 +187,11 @@ export default function Navbar() {
                         <a href="#" className="main-header__cart-btn">
                             <i className="fas fa-shopping-cart main-header__cart-icon"></i>
                         </a>
-                        <a href="#" className="main-header__profile">
+                        <Link to='/register' className="main-header__profile">
                             <span className="main-header__profile-text">
                                 ورود / ثبت نام
                             </span>
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
