@@ -7,11 +7,13 @@ export default function Navbar() {
             <div className="container-fluid">
                 <div className="main-header__content">
                     <div className="main-header__right">
-                        <img
-                            src="images/logo/Logo.png"
-                            className="main-header__logo"
-                            alt="لوگوی سبزلرن"
-                        />
+                        <Link to='/'>
+                            <img
+                                src="images/logo/Logo.png"
+                                className="main-header__logo"
+                                alt="لوگوی سبزلرن"
+                            />
+                        </Link>
 
                         <ul className="main-header__menu">
                             <li className="main-header__item">
@@ -187,7 +189,7 @@ export default function Navbar() {
                         <a href="#" className="main-header__cart-btn">
                             <i className="fas fa-shopping-cart main-header__cart-icon"></i>
                         </a>
-                        <Link to='/register' className="main-header__profile">
+                        <Link to="/register" className="main-header__profile">
                             <span className="main-header__profile-text">
                                 ورود / ثبت نام
                             </span>
