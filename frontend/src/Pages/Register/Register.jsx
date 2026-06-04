@@ -7,6 +7,9 @@ import './Register.css';
 import Input from '../../Components/Form/Input';
 import Button from '../../Components/Form/Button';
 
+import AuthContext from '../../context/authContext';
+import { useContext } from 'react';
+
 import {
     requiredValidator,
     minValidator,
@@ -17,6 +20,9 @@ import {
 import { useForm } from '../../hooks/useForm';
 
 export default function Register() {
+    const authContext = useContext(AuthContext);
+    console.log(authContext);
+
     const [formState, onInputHandler] = useForm(
         {
             username: {
@@ -39,8 +45,30 @@ export default function Register() {
         false,
     );
 
+    console.log(formState);
+
     const registerNewUser = (event) => {
         event.preventDefault();
+
+        const newUserInfos = {
+            name: formState.inputs.name.value,
+            username: formState.inputs.username.value,
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+            confirmPassword: formState.inputs.password.value,
+        };
+
+        fetch(`http://localhost:3000/v1/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newUserInfos),
+        })
+            .then((res) => res.json())
+            .then((result) => {
+                console.log(result.accessToken);
+                authContext.login(result.user, result.accessToken);
+            });
+
         console.log('User Register');
     };
 
