@@ -33,7 +33,38 @@ export default function Login() {
 
     const userLogin = (event) => {
         event.preventDefault();
-        console.log('User Login');
+
+        const userData = {
+            identifier: formState.inputs.username.value,
+            password: formState.inputs.password.value,
+        };
+
+        fetch(`http://localhost:3000/v1/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userData),
+        })
+            .then((res) => {
+                console.log(res);
+                if (!res.ok) {
+                    return res.text().then((text) => {
+                        throw new Error(text);
+                    });
+                } else {
+                    return res.json();
+                }
+            })
+            .then((result) => {
+                console.log(result);
+            })
+            .catch((err) => {
+                console.log('err =>', err);
+                alert('رمز اشتباه است')
+            });
+
+        console.log(userData);
     };
 
     return (
@@ -66,7 +97,7 @@ export default function Login() {
                                     requiredValidator(),
                                     minValidator(8),
                                     maxValidator(20),
-                                    emailValidator()
+                                    // emailValidator()
                                 ]}
                                 id="username"
                                 onInputHandler={onInputHandler}

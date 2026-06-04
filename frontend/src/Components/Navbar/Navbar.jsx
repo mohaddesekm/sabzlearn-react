@@ -1,13 +1,18 @@
 import './Navbar.css';
 import { Link } from 'react-router';
+import AuthContext from '../../context/authContext';
+import { useContext } from 'react';
 
 export default function Navbar() {
+    const authContext = useContext(AuthContext);
+    console.log(authContext);
+
     return (
         <div className="main-header">
             <div className="container-fluid">
                 <div className="main-header__content">
                     <div className="main-header__right">
-                        <Link to='/'>
+                        <Link to="/">
                             <img
                                 src="images/logo/Logo.png"
                                 className="main-header__logo"
@@ -189,11 +194,26 @@ export default function Navbar() {
                         <a href="#" className="main-header__cart-btn">
                             <i className="fas fa-shopping-cart main-header__cart-icon"></i>
                         </a>
-                        <Link to="/register" className="main-header__profile">
-                            <span className="main-header__profile-text">
-                                ورود / ثبت نام
-                            </span>
-                        </Link>
+
+                        {authContext.isLoggedIn ? (
+                            <Link
+                                to="/register"
+                                className="main-header__profile"
+                            >
+                                <span className="main-header__profile-text">
+                                    {authContext.userInfos.name}
+                                </span>
+                            </Link>
+                        ) : (
+                            <Link
+                                to="/register"
+                                className="main-header__profile"
+                            >
+                                <span className="main-header__profile-text">
+                                    ورود / ثبت نام
+                                </span>
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>
