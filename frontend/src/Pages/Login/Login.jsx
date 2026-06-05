@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import Footer from '../../Components/Footer/Footer';
 import Navbar from '../../Components/Navbar/Navbar';
 import Topbar from '../../Components/Topbar/Topbar';
@@ -14,8 +14,16 @@ import {
     maxValidator,
     emailValidator,
 } from '../../validators/rules';
+import { useContext, useState } from 'react';
+import AuthContext from '../../context/authContext';
+import swal from 'sweetalert';
+// import ReCAPTCHA from 'react-google-recaptcha';
 
 export default function Login() {
+    const authContext = useContext(AuthContext);
+    const navigate = useNavigate();
+    // const [isGoogleRecaptchaVerify, setIsGoogleRecaptchaVerify] = useState(false);
+
     const [formState, onInputHandler] = useForm(
         {
             username: {
@@ -57,15 +65,30 @@ export default function Login() {
                 }
             })
             .then((result) => {
-                console.log(result);
+                swal({
+                    title: 'با موفقیت وارد شدید',
+                    icon: 'success',
+                    buttons: 'ورود به پنل',
+                }).then((value) => {
+                    navigate('/');
+                });
+                authContext.login({}, result.accessToken);
             })
             .catch((err) => {
-                console.log('err =>', err);
-                alert('رمز اشتباه است')
+                swal({
+                    title: 'همچین کاربری وجود ندارد',
+                    icon: 'error',
+                    buttons: 'تلاش دوباره',
+                });
             });
 
         console.log(userData);
     };
+
+    // const onChangeHandler = () => {
+    //     console.log('recaptcha');
+    //     setIsGoogleRecaptchaVerify(true);
+    // };
 
     return (
         <>
@@ -119,12 +142,26 @@ export default function Login() {
                                 onInputHandler={onInputHandler}
                             />
                             <i className="login-form__password-icon fa fa-lock-open"></i>
+
+                            {/* <ReCAPTCHA
+                                sitekey="Your client site key"
+                                onChange={onChangeHandler}
+                            /> */}
                         </div>
                         <Button
-                            className={`login-form__btn ${formState.isFormValid ? 'login-form__btn-success' : 'login-form__btn-error'}`}
+                            className={`login-form__btn ${
+                                // formState.isFormValid && isGoogleRecaptchaVerify
+                                formState.isFormValid
+                                    ? 'login-form__btn-success'
+                                    : 'login-form__btn-error'
+                            }`}
                             type="submit"
                             onClick={userLogin}
-                            disabled={!formState.isFormValid}
+                            disabled={
+                                !formState.isFormValid
+                                // ||
+                                // !isGoogleRecaptchaVerify
+                            }
                         >
                             <i className="login-form__btn-icon fas fa-sign-out-alt"></i>
                             <span className="login-form__btn-text">ورود</span>
