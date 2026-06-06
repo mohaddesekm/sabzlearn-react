@@ -5,8 +5,20 @@ import Footer from '../../Components/Footer/Footer';
 import CourseBox from '../../Components/CourseBox/CourseBox';
 
 import './Courses.css';
+import { useEffect, useState } from 'react';
 
 export default function Courses() {
+    // const [courses, setCourses] = useState([]);
+
+    // useEffect(() => {
+    //     fetch(`http://localhost:3000/v1/courses`)
+    //         .then((res) => res.json())
+    //         .then((allCourses) => {
+    //             console.log(allCourses);
+    //             setCourses(allCourses);
+    //         });
+    // }, []);
+
     return (
         <>
             <Topbar />

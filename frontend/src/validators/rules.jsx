@@ -3,8 +3,6 @@ const minValue = 'MIN_VALUE';
 const maxValue = 'MAX_VALUE';
 const emailValue = 'EMAIL_VALUE';
 
-console.log('test');
-
 export const requiredValidator = () => ({
     value: requiredValue,
 });

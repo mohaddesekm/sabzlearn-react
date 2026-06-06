@@ -7,8 +7,37 @@ import CommentsTextArea from '../../Components/CommentsTextArea/CommentsTextArea
 import Accordion from 'react-bootstrap/Accordion';
 
 import './CourseInfo.css';
+import { use, useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 
 export default function CourseInfo() {
+    const [comments, setComments] = useState([]);
+    const [sessions, setSessions] = useState([]);
+    const [createdAt, setCreatedAt] = useState('');
+    const [updatedAt, setUpdatedAt] = useState('');
+    const [courseDetails, setCourseDetails] = useState({});
+
+    const { courseName } = useParams();
+
+    useEffect(() => {
+        const localStorageData = JSON.parse(localStorage.getItem('user'));
+
+        fetch(`http://localhost:3000/v1/courses/${courseName}`, {
+            method: 'POST',
+            headers: {
+                Authorization: `Bearer ${localStorageData == null ? null : localStorageData.token}`,
+            },
+        })
+            .then((res) => res.json())
+            .then((courseInfo) => {
+                setComments(courseInfo.comments);
+                setSessions(courseInfo.sessions);
+                setCourseDetails(courseInfo);
+                setCreatedAt(courseInfo.createdAt);
+                setUpdatedAt(courseInfo.updatedAt);
+            });
+    }, []);
+
     return (
         <>
             <Topbar />
@@ -38,17 +67,14 @@ export default function CourseInfo() {
                                 آموزش برنامه نویسی فرانت اند
                             </a>
                             <h1 className="course-info__title">
-                                آموزش 20 کتابخانه جاوااسکریپت برای بازار کار
+                                {courseDetails.name
+                                    ? courseDetails.name
+                                    : 'دوره جاوااسکریپت'}
                             </h1>
                             <p className="course-info__text">
-                                امروزه کتابخانه‌ها کد نویسی را خیلی آسان و لذت
-                                بخش تر کرده اند. به قدری که حتی امروزه هیچ شرکت
-                                برنامه نویسی پروژه های خود را با Vanilla Js
-                                پیاده سازی نمی کند و همیشه از کتابخانه ها و
-                                فریمورک های موجود استفاده می کند. پس شما هم اگه
-                                میخواید یک برنامه نویس عالی فرانت اند باشید،
-                                باید کتابخانه های کاربردی که در بازار کار
-                                استفاده می شوند را به خوبی بلد باشید
+                                {courseDetails.description
+                                    ? courseDetails.description
+                                    : 'امروزه کتابخانه‌ها کد نویسی را خیلی آسان و لذت بخش تر کرده اند. به قدری که حتی امروزه هیچ شرکت برنامه نویسی پروژه های خود را با Vanilla Js پیاده سازی نمی کند و همیشه از کتابخانه ها و فریمورک های موجود استفاده می کند. پس شما هم اگه میخواید یک برنامه نویس عالی فرانت اند باشید، باید کتابخانه های کاربردی که در بازار کار استفاده می شوند را به خوبی بلد باشید'}
                             </p>
                             <div className="course-info__social-media">
                                 <a
@@ -94,17 +120,21 @@ export default function CourseInfo() {
                                         <CourseDetailBox
                                             icon="graduation-cap"
                                             title="وضعیت دوره:"
-                                            text="به اتمام رسیده"
+                                            text={
+                                                courseDetails.isComplete == 1
+                                                    ? 'به اتمام رسیده'
+                                                    : 'در حال برگزاری'
+                                            }
                                         />
                                         <CourseDetailBox
                                             icon="clock"
-                                            title=" مدت زمان دوره:"
-                                            text="19 ساعت"
+                                            title="زمان برگزاری:"
+                                            text='1401/3/2'
                                         />
                                         <CourseDetailBox
                                             icon="calendar-alt"
                                             title="آخرین بروزرسانی:"
-                                            text="1401/03/02"
+                                            text='1401/3/2'
                                         />
                                         <CourseDetailBox
                                             icon="graduation-cap"
@@ -404,10 +434,16 @@ export default function CourseInfo() {
                             <div className="courses-info">
                                 <div className="course-info">
                                     <div className="course-info__register">
-                                        <span className="course-info__register-title">
-                                            <i className="fas fa-graduation-cap course-info__register-icon"></i>
-                                            دانشجوی دوره هستید
-                                        </span>
+                                        {courseDetails.isUserRegisteredToThisCourse ? (
+                                            <span className="course-info__register-title">
+                                                <i className="fas fa-graduation-cap course-info__register-icon"></i>
+                                                دانشجوی دوره هستید
+                                            </span>
+                                        ) : (
+                                            <span className="course-info__register-title">
+                                                ثبت نام در دوره
+                                            </span>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="course-info">
@@ -419,7 +455,9 @@ export default function CourseInfo() {
                                                     تعداد دانشجو :
                                                 </span>
                                                 <span className="course-info__total-sale-number">
-                                                    178
+                                                    {courseDetails.courseStudentsCount
+                                                        ? courseDetails.courseStudentsCount
+                                                        : '178'}
                                                 </span>
                                             </div>
                                         </div>

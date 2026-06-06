@@ -5,8 +5,22 @@ import Footer from '../../Components/Footer/Footer';
 import './Category.css';
 import CourseBox from '../../Components/CourseBox/CourseBox';
 import Pagination from '../../Components/Pagination/Pagination';
+import { useParams } from 'react-router';
+import { useEffect, useState } from 'react';
 
 export default function Category() {
+    // const [courses, setCourses] = useState([]);
+    // const { categoryName } = useParams();
+
+    // useEffect(() => {
+    //     fetch(`http://localhost:4000/v1/courses/${categoryName}`)
+    //         .then((res) => res.json())
+    //         .then((allCourses) => {
+    //             console.log(allCourses);
+    //             setCourses(allCourses);
+    //         });
+    // }, [categoryName]);
+
     return (
         <>
             <Topbar />
